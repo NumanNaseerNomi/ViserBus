@@ -33,9 +33,7 @@
                                 <select name="dropping_point" id="dropping_point" class="form--control select2">
                                     <option value="">@lang('Select One')</option>
                                     @foreach($stoppages as $item)
-                                    <option value="{{ $item->id }}" @if (Session::get('destination')==$item->id)
-                                        selected
-                                        @endif>
+                                    <option value="{{ $item->id }}" @if (request()->destination == $item->id) selected @endif>
                                         {{ __($item->name) }}
                                     </option>
                                     @endforeach
