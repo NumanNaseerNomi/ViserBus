@@ -245,6 +245,21 @@ $counters = App\Models\Counter::get();
             <div class="col-lg-9">
 
                 <div class="ticket-wrapper">
+                    @if($trips->total())
+                        <table class="booking-table">
+                            <thead>
+                                <tr>
+                                    <th>@lang('Vehicle Type')</th>
+                                    <th>@lang('Starting Point')</th>
+                                    <th>@lang('Dropping Point')</th>
+                                    <th>@lang('Pickup Time')</th>
+                                    <th>@lang('Fare')</th>
+                                    <th>@lang('Off Days')</th>
+                                    <th>@lang('Seats')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    @endif
 
                     @forelse ($trips as $trip)
 
@@ -288,9 +303,51 @@ $counters = App\Models\Counter::get();
 
 
 
-                    <div class="ticket-item">
+                                <tr>
+                                    <td class="text-success">{{ __($trip->fleetType->name) }}</td>
+                                    <td class="text-success">{{ __($trip->startFrom->name) }}</td>
+                                    <td class="text-success">{{ __($trip->endTo->name) }}</td>
+                                    <td class="text-success">{{ showDateTime($trip->schedule->start_from, 'h:i A') }}</td>
+                                    <td class="text-success">{{ __($general->cur_sym) }}{{ showAmount($ticket->price) }}</td>
+                                    <td class="text-success">
+                                        @if($trip->day_off)
+                                            <div class="seats-left mt-2 mb-3 fs--14px">
+                                                <div class="d-inline-flex flex-wrap" style="gap:5px">
+                                                    @foreach ($trip->day_off as $item)
+                                                        <span class="badge badge--primary">{{ __(showDayOff($item)) }}</span>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @else
+                                            @lang('Every day available')
+                                        @endif
+                                    </td>
+                                    <td class="text-success">2 available out of 5<br/>
+                                        @php
+                                            $urlstring = "/?";
+                                            if(!empty(request()->pickup)){ $urlstring .= 'pickup='. request()->pickup;}
+                                            if(!empty(request()->destination)){ $urlstring .= '&destination='. request()->destination;}
+                                            if(!empty(request()->date_of_journey)){ $urlstring .= '&date_of_journey='. request()->date_of_journey;}
+                                        @endphp
+                                        <a class="btn btn--base" href="{{ route('ticket.seats', [$trip->id, slug($trip->title)]) }} {{$urlstring}}">@lang('Select Seat')</a>
+                                    </td>
+                                </tr>
+                                @if ($trip->fleetType->facilities)
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="d-flex content-justify-center">
+                                            <strong>@lang('Facilities: ')</strong>
+                                                @foreach ($trip->fleetType->facilities as $item)
+                                                    <span class="facilities">{{ __($item) }}</span>
+                                                @endforeach
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
 
-                        <div class="ticket-item-inner">
+                    <!-- <div class="ticket-item"> -->
+
+                        <!-- <div class="ticket-item-inner">
 
                             <h5 class="bus-name">{{ __($trip->title) }}</h5>
 
@@ -301,9 +358,9 @@ $counters = App\Models\Counter::get();
                             <span class="ratting">Avilable Seats: {{$left_seats}}</span>
 
                             @php } @endphp
-                        </div>
+                        </div> -->
 
-                        <div class="ticket-item-inner travel-time">
+                        <!-- <div class="ticket-item-inner travel-time">
 
                             <div class="bus-time">
 
@@ -329,9 +386,9 @@ $counters = App\Models\Counter::get();
 
                             </div>
 
-                        </div>
+                        </div> -->
 
-                        <div class="ticket-item-inner book-ticket">
+                        <!-- <div class="ticket-item-inner book-ticket">
 
                             <p class="rent mb-0">{{ __($general->cur_sym) }}{{ showAmount($ticket->price) }}</p>
 
@@ -364,9 +421,9 @@ $counters = App\Models\Counter::get();
                                 @endphp
                             <a class="btn btn--base" href="{{ route('ticket.seats', [$trip->id, slug($trip->title)]) }} {{$urlstring}}">@lang('Select Seat')</a>
 
-                        </div>
+                        </div> -->
 
-                        @if ($trip->fleetType->facilities)
+                        <!-- @if ($trip->fleetType->facilities)
 
                         <div class="ticket-item-footer">
 
@@ -388,9 +445,9 @@ $counters = App\Models\Counter::get();
 
                         </div>
 
-                        @endif
+                        @endif -->
 
-                    </div>
+                    <!-- </div> -->
 
                     @empty
 
@@ -401,6 +458,8 @@ $counters = App\Models\Counter::get();
                     </div>
 
                     @endforelse
+                            </tbody>
+                        </table>
 
                     @if ($trips->hasPages())
 
