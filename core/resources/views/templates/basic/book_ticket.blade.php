@@ -11,7 +11,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="date_of_journey" class="form-label">@lang('Journey Date')</label>
-                                <input type="text" id="date_of_journey" class="form--control datepicker" value="{{ Session::get('date_of_journey') ? Session::get('date_of_journey') : date('m/d/Y') }}" name="date_of_journey">
+                                <input type="text" id="date_of_journey" class="form--control datepicker" value="{{ request()->date_of_journey }}" name="date_of_journey">
                             </div>
                         </div>
                         <div class="col-12">
