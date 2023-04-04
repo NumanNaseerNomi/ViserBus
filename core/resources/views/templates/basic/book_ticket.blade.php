@@ -20,7 +20,7 @@
                                 <select name="pickup_point" id="pickup_point" class="form--control select2">
                                     <option value="">@lang('Select One')</option>
                                     @foreach($stoppages as $item)
-                                    <option value="{{ $item->id }}" @if (Session::get('pickup')==$item->id)
+                                    <option value="{{ $item->id }}" @if (request()->pickup == $item->id)
                                         selected
                                         @endif>
                                         {{ __($item->name) }}
