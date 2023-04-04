@@ -20,9 +20,7 @@
                                 <select name="pickup_point" id="pickup_point" class="form--control select2">
                                     <option value="">@lang('Select One')</option>
                                     @foreach($stoppages as $item)
-                                    <option value="{{ $item->id }}" @if (request()->pickup == $item->id)
-                                        selected
-                                        @endif>
+                                    <option value="{{ $item->id }}" @if (request()->pickup == $item->id) selected @endif>
                                         {{ __($item->name) }}
                                     </option>
                                     @endforeach
