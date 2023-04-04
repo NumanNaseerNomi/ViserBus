@@ -44,7 +44,7 @@
                             <label class="form-label">@lang('Select Gender')</label>
                             <div class="d-flex flex-wrap justify-content-between">
                                 <div class="form-group custom--radio">
-                                    <input id="male" type="radio" name="gender" value="1">
+                                    <input id="male" type="radio" name="gender" value="1" required>
                                     <label class="form-label" for="male">@lang('Male')</label>
                                 </div>
                                 <div class="form-group custom--radio">
