@@ -322,7 +322,7 @@ $counters = App\Models\Counter::get();
                                             @lang('Every day available')
                                         @endif
                                     </td>
-                                    <td class="text-success">2 available out of 5<br/>
+                                    <td class="text-success">2 available out of {{ __($trip->fleetType->deck_seats[0]) }}<br/>
                                         @php
                                             $urlstring = "/?";
                                             if(!empty(request()->pickup)){ $urlstring .= 'pickup='. request()->pickup;}
