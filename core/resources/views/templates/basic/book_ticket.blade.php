@@ -72,8 +72,8 @@
                             @if (!Auth::guest())
                             <button type="submit" class="book-bus-btn">@lang('Continue')</button>
                             @else
-                            <button type="button" class="book-bus-btn guestlogin">@lang('Continue As Guest')</button>
-                            <br/> OR <br/>
+                            <!-- <button type="button" class="book-bus-btn guestlogin">@lang('Continue As Guest')</button>
+                            <br/> OR <br/> -->
                             <button type="button" class="book-bus-btn memberslogin">@lang('Members Login')</button>
                             @endif
                         </div>
