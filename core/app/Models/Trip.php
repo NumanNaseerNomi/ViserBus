@@ -18,6 +18,10 @@ class Trip extends Model
         return $this->belongsTo(FleetType::class);
     }
 
+    public function ticketPrice(){
+        return $this->belongsTo(TicketPrice::class, 'fleet_type_id', 'fleet_type_id')->where('vehicle_route_id', $this->vehicle_route_id);
+    }
+
     public function route(){
         return $this->belongsTo(VehicleRoute::class ,'vehicle_route_id' );
     }

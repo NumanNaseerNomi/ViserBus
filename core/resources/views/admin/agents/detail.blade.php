@@ -70,18 +70,18 @@
                                     <input class="form-control" type="text" name="lastname" value="{{$user->lastname}}">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Email') <span class="text-danger">*</span></label>
                                     <input class="form-control" type="email" name="email" value="{{$user->email}}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Commission') %</label>
                                     <input class="form-control onlyNumericValue" type="text" name="commission" value="{{$user->commision}}" maxlength="2">
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="row">

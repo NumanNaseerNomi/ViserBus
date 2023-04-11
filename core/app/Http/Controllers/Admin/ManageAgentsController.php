@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
-use App\Models\EmailLog;
+use App\Models\Trip;
 use App\Models\User;
 use App\Models\Agent;
 use App\Models\Category;
+use App\Models\EmailLog;
 use Illuminate\Http\Request;
+use App\Models\AgentCommission;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,6 +24,74 @@ class ManageAgentsController extends Controller
       ->orderBy('id','desc')
       ->paginate(getPaginate());
       return view('admin.agents.list', compact('pageTitle', 'emptyMessage', 'agents'));
+    }
+
+    public function allAgentsCommissions()
+    {
+      $pageTitle = 'Agents Commissions';
+      $emptyMessage = 'No agents found';
+      $agents = AgentCommission::paginate();
+      return view('admin.agents.commision_list', compact('pageTitle', 'emptyMessage', 'agents'));
+    }
+
+    public function createAgentCommission()
+    {
+        $pageTitle = 'Add Agent Commission';
+        $agents = Agent::all();
+        $trips = Trip::all();
+        $bloodgroup = bloodGroupList();
+        $documenttype = documentType();
+        $countries = json_decode(file_get_contents(resource_path('views/partials/country.json')));
+        return view('admin.agents.addAgentCommission', compact('pageTitle', 'countries','bloodgroup','documenttype', 'agents','trips'));
+    }
+
+    public function storeAgentCommission(Request $request)
+    {
+        $request->validate([
+            'agent_id' => 'required',
+            'trip_id' => [
+                'required',
+                Rule::unique('agents_commissions')->where(function ($query) use ($request) {
+                    return $query->where('agent_id', $request->agent_id);
+                })
+            ],
+            'commission_amount' => 'required',
+        ]);
+        
+        AgentCommission::create($request->all());
+        $notify[] = ['success', 'Agent commission has been created'];
+        return redirect('admin/agents/commissions')->withNotify($notify);
+    }
+
+    public function detailAgentCommission($id)
+    {
+        $pageTitle = 'Agent Commission Details';
+        $agentCommission = AgentCommission::findOrFail($id);
+        $agents = Agent::all();
+        $trips = Trip::all();
+        $bloodgroup = bloodGroupList();
+        $documenttype = documentType();
+        $countries = json_decode(file_get_contents(resource_path('views/partials/country.json')));
+        return view('admin.agents.updateAgentCommission', compact('pageTitle', 'countries','bloodgroup','documenttype', 'agents', 'trips', 'agentCommission'));
+    }
+
+    public function updateAgentCommission(Request $request, $id)
+    {
+        $agentCommission = AgentCommission::findOrFail($id);
+        $request->validate([
+            'agent_id' => 'required',
+            'trip_id' => [
+                'required',
+                Rule::unique('agents_commissions')->where(function ($query) use ($request) {
+                    return $query->where('agent_id', $request->agent_id);
+                })->ignore($id),
+            ],
+            'commission_amount' => 'required',
+        ]);
+        
+        $agentCommission->update($request->all());
+        $notify[] = ['success', 'Agent commission has been updated'];
+        return redirect('admin/agents/commissions')->withNotify($notify);
     }
 
     //Add Agent Functionality
@@ -46,7 +117,7 @@ class ManageAgentsController extends Controller
             'id_type' => 'required',
             'id_number' => 'required',
             'blood' => 'required',
-            'commission' => 'required',
+            // 'commission' => 'required',
         ]);
 
         $user = new User();

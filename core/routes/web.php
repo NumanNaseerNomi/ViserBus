@@ -143,6 +143,12 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('agents/email-log/{id}', 'ManageAgentsController@emailLog')->name('agents.email.log');
         Route::get('agents/email-details/{id}', 'ManageAgentsController@emailDetails')->name('agents.email.details');
 
+        Route::get('agents/commissions', 'ManageAgentsController@allAgentsCommissions')->name('agents.commissions.all');
+        Route::get('agents/commissions/create', 'ManageAgentsController@createAgentCommission')->name('agents.commissions.create');
+        Route::post('agents/commissions/store', 'ManageAgentsController@storeAgentCommission')->name('agents.commissions.store');
+        Route::get('agents/commissions/detail/{id}', 'ManageAgentsController@detailAgentCommission')->name('agents.commissions.detail');
+        Route::post('agents/commissions/update/{id}', 'ManageAgentsController@updateAgentCommission')->name('agents.commissions.update');
+
         /*
         |--------------------------------------------------------------------------
         | Transport Manage portion

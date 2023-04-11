@@ -5,12 +5,12 @@
         <div class="col-xl-12 col-lg-7 col-md-7 mb-30">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title border-bottom pb-2">@lang('Add Agent')</h5>
-                    <form action="{{route('admin.agents.store')}}" method="POST"
+                    <h5 class="card-title border-bottom pb-2">@lang('Add Agent Commission')</h5>
+                    <form action="{{route('admin.agents.commissions.store')}}" method="POST"
                           enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-control-label font-weight-bold">@lang('First Name')<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="firstname" value="" required>
@@ -41,43 +41,43 @@
                                     <label class="form-control-label  font-weight-bold">@lang('Mobile Number') <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="mobile" value="" required>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
+                            </div> -->
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-control-label  font-weight-bold">@lang('ID Type')<span class="text-danger">*</span></label>
-                                    <select class="form-control" name="id_type" id="id_type" auto-complete="off" required>
-                                        <option value="">Select Id type</option>
-                                        @foreach($documenttype as $dkey=>$dvalue)
-                                        <option value="{{ $dkey }}">{{ $dvalue }}</option>
+                                    <label class="form-control-label  font-weight-bold">@lang('Agent') <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="agent_id" id="agent_id" auto-complete="off" required>
+                                        <option value="">Select Agent</option>
+                                        @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}">{{ $agent->user->firstname }} ({{ $agent->user->email }})</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('ID Number')<span class="text-danger">*</span></label>
                                     <input class="form-control onlyAlphNumeric" type="text" name="id_number" value="">
                                 </div>
-                            </div>
-                            <div class="col-md-3">
+                            </div> -->
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-control-label  font-weight-bold">@lang('Blood Group') <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="blood" id="blood" auto-complete="off" required>
-                                        <option value="">Select Blood group</option>
-                                        @foreach($bloodgroup as $key=>$value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    <label class="form-control-label  font-weight-bold">@lang('Trip') <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="trip_id" id="trip_id" auto-complete="off" required>
+                                        <option value="">Select Trip</option>
+                                        @foreach($trips as $trip)
+                                        <option value="{{ $trip->id }}">{{ $trip->title }} ({{ __($general->cur_sym) }} {{ showAmount($trip->ticketPrice->price) }})</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-control-label  font-weight-bold">@lang('Commission') %</label>
-                                    <input class="form-control onlyNumericValue" type="text" name="commission" value="" maxlength="2">
+                                    <label class="form-control-label  font-weight-bold">@lang('Commission') <span class="text-danger">*</span></label>
+                                    <input class="form-control onlyNumericValue" type="text" name="commission_amount" value="" auto-complete="off" required>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Address') </label>
@@ -119,7 +119,7 @@
                                 <label class="form-control-label font-weight-bold">@lang('Status') </label>
                                 <input type="checkbox" data-onstyle="-success" data-offstyle="-danger"  data-toggle="toggle" data-on="@lang('Active')" data-off="@lang('Banned')" data-width="100%" name="status">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row mt-4">
                             <div class="col-md-12">
                                 <div class="form-group">

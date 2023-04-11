@@ -13,4 +13,9 @@ class Agent extends Model
       'address' => 'object',
     //  'ver_code_send_at' => 'datetime'
   ];
+
+  public function user()
+  {
+      return $this->belongsTo(User::class);
+  }
 }

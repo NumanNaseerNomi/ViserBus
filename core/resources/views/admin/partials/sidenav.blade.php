@@ -108,6 +108,12 @@
                                   <span class="menu-title">@lang('All Agents')</span>
                                 </a>
                             </li>
+                            <li class="sidebar-menu-item {{menuActive('admin.agents.commissions.all')}} ">
+                                <a href="{{route('admin.agents.commissions.all')}}" class="nav-link">
+                                  <i class="menu-icon las la-dot-circle"></i>
+                                  <span class="menu-title">@lang('Commissions')</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
