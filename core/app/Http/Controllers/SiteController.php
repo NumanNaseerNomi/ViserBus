@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Page;
+use App\Models\Trip;
+use App\Models\Agent;
 use App\Lib\BusLayout;
-use App\Models\AdminNotification;
-use App\Models\FleetType;
+use App\Models\Counter;
 use App\Models\Frontend;
 use App\Models\Language;
-use App\Models\Page;
 use App\Models\Schedule;
-use App\Models\SupportMessage;
-use App\Models\SupportTicket;
-use App\Models\Trip;
+use App\Models\FleetType;
 use App\Models\TicketPrice;
 use App\Models\BookedTicket;
 use App\Models\VehicleRoute;
-use App\Models\Counter;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\SupportTicket;
+use App\Models\SupportMessage;
+use App\Models\AdminNotification;
 use Illuminate\Support\Facades\Session;
 
 
@@ -176,8 +177,10 @@ class SiteController extends Controller
         $stoppageArr = $trip->route->stoppages;
         $stoppages = Counter::routeStoppages($stoppageArr);
         $busLayout = new BusLayout($trip);
+        $agent = null;
         if(auth()->user()){
             $layout = 'layouts.master';
+            $agent = (auth()->user()->category == 2) ? Agent::where('user_id', auth()->user()->id)->first() : null;
         }else{
             $layout = 'layouts.frontend';
         }
@@ -185,7 +188,7 @@ class SiteController extends Controller
         $mobile_code = @implode(',', $info['code']);
         $countries = json_decode(file_get_contents(resource_path('views/partials/country.json')));
 
-        return view($this->activeTemplate.'book_ticket', compact('pageTitle','trip' , 'stoppages','busLayout', 'layout','mobile_code','countries'));
+        return view($this->activeTemplate.'book_ticket', compact('pageTitle','trip' , 'stoppages','busLayout', 'layout','mobile_code','countries', 'agent'));
     }
     public function agentshowSeat($id){
         $trip = Trip::with( ['fleetType' ,'route', 'schedule', 'startFrom' , 'endTo', 'assignedVehicle.vehicle', 'bookedTickets'])->where('status', 1)->where('id', $id)->firstOrFail();
