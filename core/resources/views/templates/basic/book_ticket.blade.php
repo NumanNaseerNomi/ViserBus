@@ -83,7 +83,7 @@
             <div class="col-lg-4 col-md-6">
                 <h6 class="title">@lang('Click on Seat to select or deselect')</h6>
                 <h6 class="title" id="availableseats" style="color:#0E9ED4"></h6>
-                @if (auth()->user()->category == 2)
+                @if (auth()->user() && auth()->user()->category == 2)
                     <h6 class="title">{{ $agent->allowed_tickets - $agent->tickets_booked }} @lang('seats are remaining out of') {{ $agent->allowed_tickets }} @lang('allowed seats.')</h6>
                 @endif
                 @if ($trip->day_off)
