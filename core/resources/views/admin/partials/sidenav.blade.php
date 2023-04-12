@@ -303,12 +303,12 @@
                                     <span class="menu-title">@lang('Booking Reports')</span>
                                 </a>
                             </li>
-                            <li class="sidebar-menu-item {{menuActive('admin.report.email.indivisual')}}">
+                            <!-- <li class="sidebar-menu-item {{menuActive('admin.report.email.indivisual')}}">
                                 <a href="{{route('admin.report.indivisual')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
                                     <span class="menu-title">@lang('Indivisual Reports')</span>
                                 </a>
-                            </li>
+                            </li> -->
 
                         </ul>
                     </div>
