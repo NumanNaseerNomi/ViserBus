@@ -53,13 +53,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('ID Number')<span class="text-danger">*</span></label>
-                                    <input class="form-control onlyAlphNumeric" type="text" name="id_number" value="">
+                                    <input class="form-control onlyAlphNumeric" type="text" name="id_number" value="" required>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Blood Group') <span class="text-danger">*</span></label>
                                     <select class="form-control" name="blood" id="blood" auto-complete="off" required>
@@ -68,6 +68,12 @@
                                         <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="form-control-label font-weight-bold">@lang('Allowed Tickets Per Day') <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" name="allowed_tickets" value="" min="1" required>
                                 </div>
                             </div>
                             <!-- <div class="col-md-2">

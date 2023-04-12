@@ -117,6 +117,7 @@ class ManageAgentsController extends Controller
             'id_type' => 'required',
             'id_number' => 'required',
             'blood' => 'required',
+            'allowed_tickets' => 'required',
             // 'commission' => 'required',
         ]);
 
@@ -147,6 +148,7 @@ class ManageAgentsController extends Controller
         $agent->id_type = $request->id_type;
         $agent->id_number = $request->id_number;
         $agent->blood = $request->blood;
+        $agent->allowed_tickets = $request->allowed_tickets;
         $agent->commision = $request->commission;
         $agent->save();
         $notify[] = ['success', 'Agent has been created'];
