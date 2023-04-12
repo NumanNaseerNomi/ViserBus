@@ -195,7 +195,7 @@ class ManageAgentsController extends Controller
     public function detail($id)
     {
       $pageTitle = 'Agent Details';
-      $user      = User::select('users.*','agents.id_type','agents.id_number','agents.blood','agents.commision')
+      $user      = User::select('users.*','agents.id_type','agents.id_number','agents.blood','agents.commision', 'agents.allowed_tickets')
       ->join('agents', 'agents.user_id', '=', 'users.id')
       ->where('users.category', 2)
       ->findOrFail($id);
@@ -217,7 +217,8 @@ class ManageAgentsController extends Controller
           'country' => 'required',
           'id_type' => 'required',
           'id_number' => 'required',
-          'blood' => 'required'
+          'blood' => 'required',
+          'allowed_tickets' => 'required',
         ]);
         $user_ID = $user->id;
         $countryCode = $request->country;
@@ -238,6 +239,7 @@ class ManageAgentsController extends Controller
         $agent->id_type = $request->id_type;
         $agent->id_number = $request->id_number;
         $agent->blood = $request->blood;
+        $agent->allowed_tickets = $request->allowed_tickets;
         $agent->commision = $request->commission;
         $agent->save();
         $notify[] = ['success', 'Agent details has been updated'];
