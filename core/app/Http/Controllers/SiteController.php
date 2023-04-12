@@ -274,11 +274,16 @@ class SiteController extends Controller
     }
 
     public function bookTicket(Request $request,$id){
+        $agent = (auth()->user()->category == 2) ? Agent::where('user_id', auth()->user()->id)->first() : null;
+        $remainingSeats = $agent ? ($agent->allowed_tickets - $agent->tickets_booked): null;
+        $seats = array_filter((explode(',', $request->seats)));
+        $request->merge(['selected_seats' => count($seats)]);
         $request->validate([
             "pickup_point"   => "required|integer|gt:0",
             "dropping_point"  => "required|integer|gt:0",
             "date_of_journey" => "required|date",
             "seats"           => "required|string",
+            "selected_seats"  => $agent ? "required|integer|max:$remainingSeats" : "",
             "gender"          => "required|integer"
         ],[
             "seats.required"  => "Please Select at Least One Seat"
@@ -347,7 +352,7 @@ class SiteController extends Controller
             $notify[] = ['error','Invalid selection'];
             return back()->withNotify($notify);
         }
-        $seats = array_filter((explode(',', $request->seats)));
+
         $unitPrice = getAmount($getPrice->price);
         $pnr_number = getTrx(10);
         $bookedTicket = new BookedTicket();
@@ -365,6 +370,14 @@ class SiteController extends Controller
         $bookedTicket->pnr_number = $pnr_number;
         $bookedTicket->status = 0;
         $bookedTicket->save();
+
+        if($agent)
+        {
+            $agent->tickets_booked = $agent->tickets_booked + count($seats);
+            $agent->ticket_booked_at = now();
+            $agent->update();
+        }
+
         session()->put('pnr_number',$pnr_number);
         return redirect()->route('user.deposit');
     }
