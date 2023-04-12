@@ -161,6 +161,18 @@ class SiteController extends Controller
 
         if(auth()->user()){
             $layout = 'layouts.master';
+
+            if(auth()->user()->category == 2)
+            {
+                $agent = Agent::where('user_id', auth()->user()->id)->first();
+
+                if($agent && Carbon::parse($agent->ticket_booked_at)->diffInDays(Carbon::now()) > 0)
+                {
+                    $agent->tickets_booked = 0;
+                    $agent->ticket_booked_at = now();
+                    $agent->update();
+                }
+            }
         }else{
             $layout = 'layouts.frontend';
         }
