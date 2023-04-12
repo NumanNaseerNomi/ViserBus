@@ -83,22 +83,28 @@ class ReportController extends Controller
         $trips = Trip::where('status',1)->get();
         $data = array();
         foreach($arraydates as $key => $value){
-            $data[$key]['trip_date'] = $value;
             foreach($trips as $trip){
-                    $data[$key]['trip_id'] =  $trip->id;
-                    $data[$key]['trip_title'] = $trip->title;
-                    $data[$key]['fleet_id'] = $trip->fleet_type_id;
-                    $data[$key]['trip_day_off'] = $trip->day_off;
-                    $data[$key]['total_seats'] = self::total_seats($trip->fleet_type_id);
-                    $data[$key]['bookings'] = self::get_tickets($value,$trip->id);
+                $tripDetails = [];
+                $tripDetails['bookings'] = self::get_tickets($value,$trip->id);
+                
+                if($tripDetails['bookings'])
+                {
+                    $tripDetails['trip_date'] = $value;
+                    $tripDetails['trip_id'] =  $trip->id;
+                    $tripDetails['trip_title'] = $trip->title;
+                    $tripDetails['fleet_id'] = $trip->fleet_type_id;
+                    $tripDetails['trip_day_off'] = $trip->day_off;
+                    $tripDetails['total_seats'] = self::total_seats($trip->fleet_type_id);
+                    $tripDetails['agentCommission'] = $trip->agentCommission[0]->commission_amount * $tripDetails['bookings'];
                     $bookedby = self::get_tickets_bookedby($value,$trip->id);
                     if(!empty($bookedby)){
                         $booked_by_user = self::get_name($bookedby);
                     }else{
                         $booked_by_user = "";
                     }
-                    $data[$key]['booked_by'] = $booked_by_user;
-                    //
+                    $tripDetails['booked_by'] = $booked_by_user;
+                    $data[] = $tripDetails;
+                }
             }
         }
         

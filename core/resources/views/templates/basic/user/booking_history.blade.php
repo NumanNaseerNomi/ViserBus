@@ -17,6 +17,9 @@
                             <th>@lang('Booked Seats')</th>
                             <th>@lang('Status')</th>
                             <th>@lang('Fare')</th>
+                            @if(auth()->user()->category == 2)
+                                <th>@lang('Commission')</th>
+                            @endif
                             <th>@lang('Action')</th>
                         </tr>
                     </thead>
@@ -40,6 +43,9 @@
                                 @endif
                             </td>
                             <td class="fare" data-label="Fare">{{ __(showAmount($item->sub_total)) }} {{ __($general->cur_text) }}</td>
+                            @if(auth()->user()->category == 2)
+                                <td data-label="Commission">{{ __(showAmount(count($item->seats) * $item->trip->agentCommission[0]->commission_amount)) }} {{ __($general->cur_text) }}</td>
+                            @endif
                             <td class="action" data-label="Action">
                                 <div class="action-button-wrapper">
                                     @if ($item->date_of_journey >= \Carbon\Carbon::today()->format('Y-m-d') && $item->status == 1)

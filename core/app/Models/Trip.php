@@ -22,6 +22,12 @@ class Trip extends Model
         return $this->belongsTo(TicketPrice::class, 'fleet_type_id', 'fleet_type_id')->where('vehicle_route_id', $this->vehicle_route_id);
     }
 
+    public function agentCommission()
+    {
+        $agent = Agent::where('user_id', auth()->user()->id)->first();
+        return $this->hasMany(AgentCommission::class)->where('agent_id', $agent->id);
+    }
+
     public function route(){
         return $this->belongsTo(VehicleRoute::class ,'vehicle_route_id' );
     }
