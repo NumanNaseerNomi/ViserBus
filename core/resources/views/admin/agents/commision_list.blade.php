@@ -11,7 +11,7 @@
                                 <th>@lang('Agent')</th>
                                 <th>@lang('Trip')</th>
                                 <th>@lang('Fare')</th>
-                                <th>@lang('Comission')</th>
+                                <th>@lang('Commission')</th>
                                 <!-- <th>@lang('Joined At')</th> -->
                                 <th>@lang('Action')</th>
                             </tr>
