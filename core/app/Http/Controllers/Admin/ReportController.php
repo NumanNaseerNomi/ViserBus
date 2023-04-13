@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\EmailLog;
-use App\Models\Transaction;
-use App\Models\UserLogin;
-use Illuminate\Http\Request;
-use App\Models\BookedTicket;
 use App\Models\Trip;
-use App\Models\FleetType;
 use App\Models\User;
+use App\Models\Agent;
+use App\Models\EmailLog;
+use App\Models\FleetType;
+use App\Models\UserLogin;
+use App\Models\Transaction;
+use App\Models\BookedTicket;
+use Illuminate\Http\Request;
+use App\Models\AgentCommission;
+use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
@@ -95,10 +97,11 @@ class ReportController extends Controller
                     $tripDetails['fleet_id'] = $trip->fleet_type_id;
                     $tripDetails['trip_day_off'] = $trip->day_off;
                     $tripDetails['total_seats'] = self::total_seats($trip->fleet_type_id);
-                    $tripDetails['agentCommission'] = $trip->agentCommission[0]->commission_amount * $tripDetails['bookings'];
+                    $tripDetails['agentCommission'] = null;
                     $bookedby = self::get_tickets_bookedby($value,$trip->id);
                     if(!empty($bookedby)){
                         $booked_by_user = self::get_name($bookedby);
+                        $tripDetails['agentCommission'] = $this->getAgentCommission($bookedby, $trip->id)->commission_amount * $tripDetails['bookings'];
                     }else{
                         $booked_by_user = "";
                     }
@@ -110,6 +113,11 @@ class ReportController extends Controller
         
         $emptyMessage = 'Booking Reports';
         return view('admin.reports.bookings', compact('pageTitle', 'start_date', 'end_date', 'data', 'emptyMessage'));
+    }
+    public function getAgentCommission($userId, $tripId)
+    {
+        $agent = Agent::where('user_id', $userId)->first();
+        return AgentCommission::where('agent_id', $agent->id)->where('trip_id', $tripId)->first();
     }
     public function get_name($id){
         $user = User::where('id',$id)->get()->first();
