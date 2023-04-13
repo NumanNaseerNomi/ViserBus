@@ -56,6 +56,7 @@ class ManageAgentsController extends Controller
                 })
             ],
             'commission_amount' => 'required',
+            'seats_limit' => 'required',
         ]);
         
         AgentCommission::create($request->all());
@@ -87,6 +88,7 @@ class ManageAgentsController extends Controller
                 })->ignore($id),
             ],
             'commission_amount' => 'required',
+            'seats_limit' => 'required',
         ]);
         
         $agentCommission->update($request->all());

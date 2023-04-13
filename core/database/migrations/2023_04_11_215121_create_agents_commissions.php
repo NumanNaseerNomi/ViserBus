@@ -18,6 +18,7 @@ class CreateAgentsCommissions extends Migration
             $table->foreignId('agent_id')->constrained()->onDelete('cascade');
             $table->foreignId('trip_id')->constrained()->onDelete('cascade');
             $table->decimal('commission_amount', 8, 2);
+            $table->integer('seats_limit')->default(0);
             $table->timestamps();
         });
     }

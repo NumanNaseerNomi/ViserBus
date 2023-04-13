@@ -42,7 +42,7 @@
                                     <input class="form-control" type="text" name="mobile" value="" required>
                                 </div>
                             </div> -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Agent') <span class="text-danger">*</span></label>
                                     <select class="form-control" name="agent_id" id="agent_id" auto-complete="off" required>
@@ -59,7 +59,7 @@
                                     <input class="form-control onlyAlphNumeric" type="text" name="id_number" value="">
                                 </div>
                             </div> -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Trip') <span class="text-danger">*</span></label>
                                     <select class="form-control" name="trip_id" id="trip_id" auto-complete="off" required>
@@ -70,10 +70,21 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Commission') <span class="text-danger">*</span></label>
                                     <input class="form-control onlyNumericValue" type="text" name="commission_amount" value="" auto-complete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="form-control-label  font-weight-bold">@lang('Seats Limit') <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="seats_limit" id="seats_limit" auto-complete="off" required>
+                                        <option value="">Select Limit</option>
+                                        @foreach(range(1, 15) as $value)
+                                        <option value="{{ $value }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>

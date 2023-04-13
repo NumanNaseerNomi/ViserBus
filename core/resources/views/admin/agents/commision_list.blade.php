@@ -12,7 +12,7 @@
                                 <th>@lang('Trip')</th>
                                 <th>@lang('Fare')</th>
                                 <th>@lang('Commission')</th>
-                                <!-- <th>@lang('Joined At')</th> -->
+                                <th>@lang('Seats Limit')</th>
                                 <th>@lang('Action')</th>
                             </tr>
                             </thead>
@@ -36,9 +36,9 @@
                                     {{ $agent->commission_amount ? $agent->commission_amount : '-' }}
                                 </td>
 
-                                <!-- <td data-label="@lang('Joined At')">
-                                    {{ showDateTime($agent->created_at) }} <br> {{ diffForHumans($agent->created_at) }}
-                                </td> -->
+                                <td data-label="@lang('Joined At')">
+                                    {{ $agent->seats_limit ? $agent->seats_limit : '-' }}
+                                </td>
 
                                 <td data-label="@lang('Action')">
                                     <a href="{{ route('admin.agents.commissions.detail', $agent->id) }}" class="icon-btn m-1" data-toggle="tooltip" title="" data-original-title="@lang('Edit')">
