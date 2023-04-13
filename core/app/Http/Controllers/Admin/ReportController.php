@@ -119,8 +119,14 @@ class ReportController extends Controller
     }
     public function getAgentCommission($userId, $tripId)
     {
-        $agent = Agent::where('user_id', $userId)->first();
-        return AgentCommission::where('agent_id', $agent->id)->where('trip_id', $tripId)->first();
+        if($agent = Agent::where('user_id', $userId)->first())
+        {
+            return AgentCommission::where('agent_id', $agent->id)->where('trip_id', $tripId)->first();
+        }
+        else
+        {
+            return null;
+        }
     }
     public function get_name($id){
         $user = User::where('id',$id)->get()->first();
