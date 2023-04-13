@@ -101,7 +101,10 @@ class ReportController extends Controller
                     $bookedby = self::get_tickets_bookedby($value,$trip->id);
                     if(!empty($bookedby)){
                         $booked_by_user = self::get_name($bookedby);
-                        $tripDetails['agentCommission'] = $this->getAgentCommission($bookedby, $trip->id)->commission_amount * $tripDetails['bookings'];
+                        if($this->getAgentCommission($bookedby, $trip->id))
+                        {
+                            $tripDetails['agentCommission'] = $this->getAgentCommission($bookedby, $trip->id)->commission_amount * $tripDetails['bookings'];
+                        }
                     }else{
                         $booked_by_user = "";
                     }
