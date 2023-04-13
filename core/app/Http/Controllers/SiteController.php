@@ -18,6 +18,7 @@ use App\Models\VehicleRoute;
 use Illuminate\Http\Request;
 use App\Models\SupportTicket;
 use App\Models\SupportMessage;
+use App\Models\AgentCommission;
 use App\Models\AdminNotification;
 use Illuminate\Support\Facades\Session;
 
@@ -233,7 +234,7 @@ class SiteController extends Controller
         $totalseats = $totalseats_data[0]->deck_seats ;
         //$bookedTicket  = BookedTicket::where('trip_id', $request->trip_id)->where('date_of_journey', Carbon::parse($request->date)->format('Y-m-d'))->whereIn('status', [1,2])->get()->toArray();
         $bookedTicket  = BookedTicket::where('trip_id', $request->trip_id)->where('date_of_journey', Carbon::parse($request->date)->format('Y-m-d'))->whereIn('status', [1,2])
-                        ->get()->toArray();
+                        ->get();
         // echo "<pre>";
         // print_r($bookedTicket);
         // echo "</pre>";
@@ -267,6 +268,29 @@ class SiteController extends Controller
                 'error' => 'Admin may not set prices for this route. So, you can\'t buy ticket for this trip.'
             ];
         }
+
+        $data['bookingLimits'] = null;
+        
+        if(auth()->user() && auth()->user()->category == 2)
+        {
+            if($agent = Agent::where('user_id', auth()->user()->id)->first())
+            {
+                if($agentCommission = AgentCommission::where([['trip_id', $request->trip_id], ['agent_id', $agent->id]])->first())
+                {
+                    $bookedTicketByUser = $bookedTicket->where('user_id', auth()->user()->id);
+                    $totalBookedTicketByUser = 0;
+
+                    foreach($bookedTicketByUser as $bt)
+                    {
+                        $totalBookedTicketByUser += $bt['ticket_count'];
+                    }
+
+                    $data['bookingLimits']['limit'] = $agentCommission->seats_limit;
+                    $data['bookingLimits']['remaining'] = $agentCommission->seats_limit - $totalBookedTicketByUser;
+                }
+            }
+        }
+
         $data['bookedSeats']        = $bookedTicket;
         $data['reqSource']         = $request->source_id;
         $data['reqDestination']    = $request->destination_id;
@@ -286,8 +310,6 @@ class SiteController extends Controller
     }
 
     public function bookTicket(Request $request,$id){
-        $agent = (auth()->user()->category == 2) ? Agent::where('user_id', auth()->user()->id)->first() : null;
-        $remainingSeats = $agent ? ($agent->allowed_tickets - $agent->tickets_booked): null;
         $seats = array_filter((explode(',', $request->seats)));
         $request->merge(['selected_seats' => count($seats)]);
         $request->validate([
@@ -295,7 +317,7 @@ class SiteController extends Controller
             "dropping_point"  => "required|integer|gt:0",
             "date_of_journey" => "required|date",
             "seats"           => "required|string",
-            "selected_seats"  => $agent ? "required|integer|max:$remainingSeats" : "",
+            "selected_seats"  => $request->bookingLimitsRemaining != null ? "required|integer|max:$request->bookingLimitsRemaining" : "",
             "gender"          => "required|integer"
         ],[
             "seats.required"  => "Please Select at Least One Seat"
@@ -382,13 +404,6 @@ class SiteController extends Controller
         $bookedTicket->pnr_number = $pnr_number;
         $bookedTicket->status = 0;
         $bookedTicket->save();
-
-        if($agent)
-        {
-            $agent->tickets_booked = $agent->tickets_booked + count($seats);
-            $agent->ticket_booked_at = now();
-            $agent->update();
-        }
 
         session()->put('pnr_number',$pnr_number);
         return redirect()->route('user.deposit');

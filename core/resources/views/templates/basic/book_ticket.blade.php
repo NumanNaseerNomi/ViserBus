@@ -8,6 +8,7 @@
                     <form action="{{ route('ticket.book', $trip->id) }}" method="POST" id="bookingForm" class="row gy-2">
                         @csrf
                         <input type="text" name="price" hidden>
+                        <input type="number" name="bookingLimitsRemaining" hidden>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="date_of_journey" class="form-label">@lang('Journey Date')</label>
@@ -83,9 +84,7 @@
             <div class="col-lg-4 col-md-6">
                 <h6 class="title">@lang('Click on Seat to select or deselect')</h6>
                 <h6 class="title" id="availableseats" style="color:#0E9ED4"></h6>
-                @if (auth()->user() && auth()->user()->category == 2)
-                    <h6 class="title">{{ $agent->allowed_tickets - $agent->tickets_booked }} @lang('seats are remaining out of') {{ $agent->allowed_tickets }} @lang('allowed seats.')</h6>
-                @endif
+                <h6 class="title" id="bookingLimits"></h6>
                 @if ($trip->day_off)
                 <span class="fs--14px">
                     @lang('Off Days') :
@@ -506,6 +505,13 @@
                         var reqDestination = response.reqDestination;
                         
                         $("#availableseats").html("Available Seats :" + response.left_seats + " Seats");
+
+                        if(response.bookingLimits)
+                        {
+                            $("#bookingLimits").html(response.bookingLimits['remaining'] + " seat(s) remaining out of "+ response.bookingLimits['limit'] + " allowed seats.");
+                            $('input[name=bookingLimitsRemaining]').val(response.bookingLimits['remaining']);
+                        }
+                        
                         reqSource = stoppages.indexOf(reqSource.toString());
                         reqDestination = stoppages.indexOf(reqDestination.toString());
 
