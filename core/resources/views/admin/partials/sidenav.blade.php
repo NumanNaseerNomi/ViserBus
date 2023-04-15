@@ -297,7 +297,7 @@
                                     <span class="menu-title">@lang('Email History')</span>
                                 </a>
                             </li>
-                            <li class="sidebar-menu-item {{menuActive('admin.report.email.history')}}">
+                            <li class="sidebar-menu-item {{menuActive('admin.report.bookings')}}">
                                 <a href="{{route('admin.report.bookings')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
                                     <span class="menu-title">@lang('Booking Reports')</span>
