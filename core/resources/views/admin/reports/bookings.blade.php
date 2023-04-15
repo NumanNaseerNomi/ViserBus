@@ -63,8 +63,8 @@
                                 <th>@lang('Title')</th>
                                 <th>@lang('Seats Capacity')</th>
                                 <th>@lang('Bookings')</th>
-                                <th>@lang('Commission')</th>
-                                <th>@lang('Booked By')</th>
+                                <!-- <th>@lang('Commission')</th> -->
+                                <!-- <th>@lang('Booked By')</th> -->
                                 
                             </tr>
                             </thead>
@@ -88,16 +88,16 @@
                                 <td data-label="@lang('Bookings')">
                                     {{ $d['bookings'] }}
                                 </td>
-                                <td data-label="@lang('Commission')">
+                                <!-- <td data-label="@lang('Commission')">
                                     @if($d['agentCommission'])
                                         {{ $d['agentCommission'] }}
                                     @else
                                         -
                                     @endif
-                                </td>
-                                <td data-label="@lang('Booked By')">
+                                </td> -->
+                                <!-- <td data-label="@lang('Booked By')">
                                     {{ $d['booked_by'] }}
-                                </td>
+                                </td> -->
                                 
                             </tr>
                             @empty
