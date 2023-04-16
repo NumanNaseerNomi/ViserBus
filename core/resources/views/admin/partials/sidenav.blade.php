@@ -303,6 +303,12 @@
                                     <span class="menu-title">@lang('Booking Reports')</span>
                                 </a>
                             </li>
+                            <li class="sidebar-menu-item {{menuActive('admin.report.commission')}}">
+                                <a href="{{route('admin.report.commission')}}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Commission Reports')</span>
+                                </a>
+                            </li>
                             <!-- <li class="sidebar-menu-item {{menuActive('admin.report.indivisual')}}">
                                 <a href="{{route('admin.report.indivisual')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
