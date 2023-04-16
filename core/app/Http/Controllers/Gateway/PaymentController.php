@@ -43,9 +43,11 @@ class PaymentController extends Controller
             $request->merge(['currency' => $gatewayCurrency[0]->currency]);
             $this->depositInsert($request);
         }
-        
-        $bookedTicket = BookedTicket::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
-        return view($this->activeTemplate . 'user.payment.deposit', compact('gatewayCurrency', 'pageTitle', 'bookedTicket'));
+        else
+        {
+            $bookedTicket = BookedTicket::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+            return view($this->activeTemplate . 'user.payment.deposit', compact('gatewayCurrency', 'pageTitle', 'bookedTicket'));
+        }
     }
 
     public function depositInsert(Request $request)
