@@ -117,6 +117,94 @@ class ReportController extends Controller
         $emptyMessage = 'Booking Reports';
         return view('admin.reports.bookings', compact('pageTitle', 'start_date', 'end_date', 'data', 'emptyMessage'));
     }
+
+    public function commissionReports(Request $request)
+    {
+        $pageTitle = 'Commission Reports';
+        $emptyMessage = 'No Data found.';
+
+        $bookedTicket = BookedTicket::with(['trip', 'pickup', 'drop', 'user'])->whereHas('user', function ($query) { $query->where('category', '!=', 1); });
+        $users = $bookedTicket->get()->sortBy('users.name')->groupBy('user_id');
+        
+        if($request->user_id != null)
+        {
+            $bookedTicket = $bookedTicket->where('user_id', $request->user_id);
+        }
+
+        if($request->start_date != null)
+        {
+            $start_date = date("Y-m-d",strtotime($request->start_date));
+            $bookedTicket = $bookedTicket->where('date_of_journey', '>=', $start_date);
+        }
+
+        if($request->end_date != null)
+        {
+            $end_date = date("Y-m-d",strtotime($request->end_date));
+            $bookedTicket = $bookedTicket->where('date_of_journey', '<=', $end_date);
+        }
+
+        if($request->status != null)
+        {
+            $bookedTicket = $bookedTicket->where('status', $request->status);
+        }
+
+        $tickets = $bookedTicket->paginate();
+        return view('admin.reports.commission', compact('pageTitle', 'emptyMessage', 'tickets', 'users'));
+    }
+
+    // public function commissionReports(Request $request)
+    // {
+    //     $pageTitle = 'Commission Reports';
+
+    //     if(!empty($request->start_date)){
+    //         $start_date = date("Y-m-d",strtotime($request->start_date));
+    //     }else{
+    //         $start_date = date("Y-m-d",strtotime( "- 7 days"));
+    //     }
+    //     if(!empty($request->end_date)){
+    //         $end_date = date("Y-m-d",strtotime($request->end_date));
+    //     }else{
+    //         $end_date = date("Y-m-d",strtotime ( "+ 7 days" ));
+    //     }
+    //     $booked_tickets = BookedTicket::whereBetween('date_of_journey', [$start_date, $end_date])->get();
+    //     // dd($booked_tickets);
+    //     $arraydates = self::date_range($start_date, $end_date, $step = '+1 day', $output_format = 'Y-m-d' ) ;
+    //     $trips = Trip::where('status',1)->get();
+    //     $data = array();
+    //     foreach($arraydates as $key => $value){
+    //         foreach($trips as $trip){
+    //             $tripDetails = [];
+    //             $tripDetails['bookings'] = self::get_tickets($value,$trip->id);
+                
+    //             if($tripDetails['bookings'])
+    //             {
+    //                 $tripDetails['trip_date'] = $value;
+    //                 $tripDetails['trip_id'] =  $trip->id;
+    //                 $tripDetails['trip_title'] = $trip->title;
+    //                 $tripDetails['fleet_id'] = $trip->fleet_type_id;
+    //                 $tripDetails['trip_day_off'] = $trip->day_off;
+    //                 $tripDetails['total_seats'] = self::total_seats($trip->fleet_type_id);
+    //                 $tripDetails['agentCommission'] = null;
+    //                 $bookedby = self::get_tickets_bookedby($value,$trip->id);
+    //                 if(!empty($bookedby)){
+    //                     $booked_by_user = self::get_name($bookedby);
+    //                     if($this->getAgentCommission($bookedby, $trip->id))
+    //                     {
+    //                         $tripDetails['agentCommission'] = $this->getAgentCommission($bookedby, $trip->id)->commission_amount * $tripDetails['bookings'];
+    //                     }
+    //                 }else{
+    //                     $booked_by_user = "";
+    //                 }
+    //                 $tripDetails['booked_by'] = $booked_by_user;
+    //                 $data[] = $tripDetails;
+    //             }
+    //         }
+    //     }
+        
+    //     $emptyMessage = 'Booking Reports';
+    //     return view('admin.reports.commission', compact('pageTitle', 'start_date', 'end_date', 'data', 'emptyMessage'));
+    // }
+
     public function getAgentCommission($userId, $tripId)
     {
         if($agent = Agent::where('user_id', $userId)->first())
