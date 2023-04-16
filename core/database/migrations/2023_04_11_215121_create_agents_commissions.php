@@ -15,7 +15,7 @@ class CreateAgentsCommissions extends Migration
     {
         Schema::create('agents_commissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('agent_id')->constrained()->onDelete('cascade');
             $table->foreignId('trip_id')->constrained()->onDelete('cascade');
             $table->decimal('commission_amount', 8, 2);
             $table->integer('seats_limit')->default(0);
