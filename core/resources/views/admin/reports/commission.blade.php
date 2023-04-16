@@ -59,6 +59,7 @@
                                     <th>@lang('Status')</th>
                                     <th>@lang('Ticket Count')</th>
                                     <th>@lang('Fare')</th>
+                                    <th>@lang('Commission')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,6 +102,11 @@
                                     </td>
                                     <td data-label="@lang('Fare')">
                                         {{ __(showAmount($item->sub_total)) }} {{ __($general->cur_text) }}
+                                    </td>
+                                    <td data-label="@lang('Commission')">
+                                        @if($item->commission)
+                                            {{ __(showAmount($item->commission->commission_amount)) }} x {{ __(sizeof($item->seats)) }} = {{ __(showAmount($item->commission->commission_amount)) * __(sizeof($item->seats)) }} {{ __($general->cur_text) }}
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
