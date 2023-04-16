@@ -41,10 +41,12 @@ class User extends Authenticatable
     protected $data = [
         'data'=>1
     ];
-
-
-
-
+    
+    public function getCategory()
+    {
+        return $this->belongsTo(UserCategories::class, 'category');
+    }
+    
     public function login_logs()
     {
         return $this->hasMany(UserLogin::class);
