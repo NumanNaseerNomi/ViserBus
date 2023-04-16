@@ -149,6 +149,12 @@ class ReportController extends Controller
         }
 
         $tickets = $bookedTicket->paginate();
+
+        foreach($tickets as $key => $item)
+        {
+            $item->commission = $this->getAgentCommission($item->user_id, $item->trip_id);
+        }
+        
         return view('admin.reports.commission', compact('pageTitle', 'emptyMessage', 'tickets', 'users'));
     }
     
