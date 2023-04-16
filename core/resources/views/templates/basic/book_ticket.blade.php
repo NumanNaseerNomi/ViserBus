@@ -70,12 +70,15 @@
                         </div>
                         <input type="text" name="seats" hidden>
                         <div class="col-12">
-                            @if (!Auth::guest())
-                            <button type="submit" class="book-bus-btn">@lang('Continue')</button>
+                            @if (Auth::guard('admin')->check())
+                                <input type="hidden" name="isAdmin" value="false">
+                                <button type="submit" class="book-bus-btn" onclick="document.getElementsByName('isAdmin')[0].value='true';">@lang('Continue As Admin')</button>
+                            @endif
+                            @if (Auth::guest())
+                                <!-- <button type="button" class="book-bus-btn guestlogin">@lang('Continue As Guest')</button> -->
+                                <button type="button" class="book-bus-btn memberslogin">@lang('Members Login')</button>
                             @else
-                            <!-- <button type="button" class="book-bus-btn guestlogin">@lang('Continue As Guest')</button>
-                            <br/> OR <br/> -->
-                            <button type="button" class="book-bus-btn memberslogin">@lang('Members Login')</button>
+                                <button type="submit" class="book-bus-btn">@lang('Continue')</button>
                             @endif
                         </div>
                     </form>

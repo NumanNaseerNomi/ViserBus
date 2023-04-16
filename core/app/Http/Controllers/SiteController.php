@@ -21,6 +21,7 @@ use App\Models\SupportMessage;
 use App\Models\AgentCommission;
 use App\Models\AdminNotification;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Gateway\PaymentController;
 
 
 class SiteController extends Controller
@@ -323,7 +324,7 @@ class SiteController extends Controller
             "seats.required"  => "Please Select at Least One Seat"
         ]);
 
-        if(!auth()->user()){
+        if($request->isAdmin == 'false' && !auth()->user()){
             $notify[] = ['error', 'Without login you can\'t book any tickets'];
             return redirect()->route('user.login')->withNotify($notify);
         }
@@ -387,10 +388,11 @@ class SiteController extends Controller
             return back()->withNotify($notify);
         }
 
+        $user_id = $request->isAdmin == 'true' ? auth('admin')->user()->id : auth()->user()->id;
         $unitPrice = getAmount($getPrice->price);
         $pnr_number = getTrx(10);
         $bookedTicket = new BookedTicket();
-        $bookedTicket->user_id = auth()->user()->id;
+        $bookedTicket->user_id = $user_id;
         $bookedTicket->gender = $request->gender;
         $bookedTicket->trip_id = $trip->id;
         $bookedTicket->source_destination = [$request->pickup_point, $request->dropping_point];
@@ -406,6 +408,15 @@ class SiteController extends Controller
         $bookedTicket->save();
 
         session()->put('pnr_number',$pnr_number);
+        session()->forget('bookByAdmin');
+
+        if($request->isAdmin == 'true')
+        {
+            session()->put('bookByAdmin', true);
+            app(PaymentController::class)->deposit();
+            return redirect()->route('admin.dashboard');
+        }
+        
         return redirect()->route('user.deposit');
     }
 

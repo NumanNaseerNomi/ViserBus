@@ -34,6 +34,16 @@ class PaymentController extends Controller
         })->with('method')->orderby('method_code')->get();
 
         $pageTitle = 'Payment Methods';
+
+        if(session()->get('bookByAdmin'))
+        {
+            $bookedTicket = BookedTicket::where('user_id', auth('admin')->user()->id)->orderBy('id', 'desc')->first();
+            $request = new Request;
+            $request->merge(['method_code' => $gatewayCurrency[0]->method_code]);
+            $request->merge(['currency' => $gatewayCurrency[0]->currency]);
+            $this->depositInsert($request);
+        }
+        
         $bookedTicket = BookedTicket::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
         return view($this->activeTemplate . 'user.payment.deposit', compact('gatewayCurrency', 'pageTitle', 'bookedTicket'));
     }
@@ -48,7 +58,7 @@ class PaymentController extends Controller
         $pnr_number = session()->get('pnr_number');
         $bookedTicket = BookedTicket::where('pnr_number', $pnr_number)->first();
 
-        $user = auth()->user();
+        $user = session()->get('bookByAdmin') ? auth('admin')->user() : auth()->user();
         $gate = GatewayCurrency::whereHas('method', function ($gate) {
             $gate->where('status', 1);
         })->where('method_code', $request->method_code)->where('currency', $request->currency)->first();
@@ -81,6 +91,17 @@ class PaymentController extends Controller
         $data->status = 0;
         $data->save();
         session()->put('Track', $data->trx);
+
+        if(session()->get('bookByAdmin'))
+        {
+            $bookedTicket = BookedTicket::where('user_id', auth('admin')->user()->id)->orderBy('id', 'desc')->first();
+            $request = new Request;
+            $request->merge(['name' => auth('admin')->user()->name]);
+            $request->merge(['email' => auth('admin')->user()->name]);
+            $request->merge(['phone' => 0000]);
+            $this->manualDepositUpdate($request);
+        }
+
         return redirect()->route('user.deposit.preview');
     }
 

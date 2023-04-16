@@ -173,6 +173,12 @@
                     </a>
                     <div class="sidebar-submenu {{menuActive('admin.vehicle.ticket*',2)}} ">
                         <ul>
+                            <li class="sidebar-menu-item {{menuActive('ticket')}} ">
+                                <a href="{{ route('ticket') }}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Book Now')</span>
+                                </a>
+                            </li>
                             <li class="sidebar-menu-item {{menuActive('admin.vehicle.ticket.pending')}} ">
                                 <a href="{{ route('admin.vehicle.ticket.pending') }}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
