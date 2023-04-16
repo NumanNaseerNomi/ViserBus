@@ -107,6 +107,10 @@
                                         @if($item->commission)
                                             {{ __(showAmount($item->commission->commission_amount)) }} x {{ __(sizeof($item->seats)) }} = {{ __(showAmount($item->commission->commission_amount)) * __(sizeof($item->seats)) }} {{ __($general->cur_text) }}
                                         @endif
+                                        @if($tickets->lastPage() == $tickets->currentPage() && $loop->last)
+                                            <br/>
+                                            <h6>Total {{ __(showAmount($item->sub_total)) }} {{ __($general->cur_text) }}</h6>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
