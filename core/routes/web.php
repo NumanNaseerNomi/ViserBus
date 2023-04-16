@@ -279,6 +279,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('report/indivisual', 'ReportController@indivisual_reports')->name('report.indivisual');
         Route::get('report/login/ipHistory/{ip}', 'ReportController@loginIpHistory')->name('report.login.ipHistory');
         Route::get('report/email/history', 'ReportController@emailHistory')->name('report.email.history');
+        Route::get('report/commission', 'ReportController@commissionReports')->name('report.commission');
 
         // Admin Support
         Route::get('tickets', 'SupportTicketController@tickets')->name('ticket');
